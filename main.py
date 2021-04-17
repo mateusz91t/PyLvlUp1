@@ -27,3 +27,8 @@ def hello_name_view(name: str):
 @app.get("/counter")
 def counter_viev():
     return next(app.counter)
+
+
+@app.options("/method")
+def method_view():
+    return {"method": "options"}

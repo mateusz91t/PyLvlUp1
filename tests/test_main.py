@@ -24,8 +24,8 @@ def test_hello_name(name):
     # assert response.text == f'"Hello {name}"'  # refactor
     assert response.json() == {"message": f"Hello {name}"}
 
+
 def test_counter():
-    assert client.counter == 0
     # 1st test
     response = client.get("/counter")
     assert response.status_code == 200
@@ -34,3 +34,9 @@ def test_counter():
     response = client.get("/counter")
     assert response.status_code == 200
     assert response.text == '2'
+
+
+def test_method():
+    response = client.options("/method")
+    assert response.status_code == 200
+    assert response.json() == {"method": "options"}
