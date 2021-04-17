@@ -21,8 +21,8 @@ def test_hello():
 def test_hello_name(name):
     response = client.get(f"/hello/{name}")
     assert response.status_code == 200
-    assert response.text == f'"Hello {name}"'
-
+    # assert response.text == f'"Hello {name}"'  # refactor
+    assert response.json() == {"message": f"Hello {name}"}
 
 def test_counter():
     assert client.counter == 0
