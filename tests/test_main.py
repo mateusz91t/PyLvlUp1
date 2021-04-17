@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from main import app
 
 client = TestClient(app)
+client.counter = 0
 
 # pytest -v -W ignore::DeprecationWarning
 # -v wyświetli szczegółowe inf o testach
@@ -18,8 +19,18 @@ def test_hello():
 
 @pytest.mark.parametrize('name', ['Zenek', 'Janek', 'Matt', '12312@! 1'])
 def test_hello_name(name):
-    # name = "Matt"
     response = client.get(f"/hello/{name}")
-    print('jajajajaja')
     assert response.status_code == 200
     assert response.text == f'"Hello {name}"'
+
+
+def test_counter():
+    assert client.counter == 0
+    # 1st test
+    response = client.get("/counter")
+    assert response.status_code == 200
+    assert response.text == '1'
+    # 2nd test
+    response = client.get("/counter")
+    assert response.status_code == 200
+    assert response.text == '2'
