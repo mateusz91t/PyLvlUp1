@@ -1,0 +1,1 @@
+The project is developed for the Python Level Up course.
