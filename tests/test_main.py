@@ -58,3 +58,32 @@ def test_auth(password: str, password_hash: str):
         print(response.raw)
     else:
         assert response.status_code == 401
+
+
+@pytest.mark.parametrize(
+    [  # values set
+        'json_in', 'json_out'
+    ],
+    [  # answers set
+        [  # 1st answer
+            {  # 1st element [json_in] from 1st answer
+                "name": "Jan",
+                "surname": "Kowalski"
+            },
+            {
+                "id": 1,
+                "name": "Jan",
+                "surname": "Kowalski",
+                "register_date": "2021-04-01",
+                "vaccination_date": "2021-04-09"
+            }
+        ]
+    ]
+
+)
+def test_register_view(json_in, json_out):
+    response = client.post(f"/register", json=json_in)
+    dct_json = dict(response.json())
+    assert response.status_code == 201
+    assert dct_json['name'] == json_out['name']
+    assert dct_json['surname'] == json_out['surname']
