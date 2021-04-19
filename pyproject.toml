@@ -1,4 +1,5 @@
 [tool.pytest.ini_options]
 filterwarnings = [
+    # można uruhamiać pytest -W ignore::DeprecationWarning lub odkomentować:
     # "ignore::DeprecationWarning:"
 ]

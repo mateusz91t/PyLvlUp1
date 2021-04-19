@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
-from myserives.methods_for_main import count
+from myservices.classmodels import HelloNameResponse
+from myservices.methods_for_main import count, get_hash
 
 app = FastAPI()
 app.counter = count()
@@ -9,9 +10,6 @@ app.counter = count()
 
 # to run type:
 # uvicorn main:app
-
-class HelloNameResponse(BaseModel):
-    message: str
 
 
 @app.get('/')
@@ -32,3 +30,15 @@ def counter_viev():
 @app.options("/method")
 def method_view():
     return {"method": "options"}
+
+
+@app.get("/auth")
+def auth_view(password: str, password_hash: str):
+    hashed = get_hash(password) == password_hash
+    if hashed:
+        response = JSONResponse()
+        response.status_code = 204
+        response.body = b''
+        return response
+    else:
+        return JSONResponse(status_code=401)
