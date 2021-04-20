@@ -33,7 +33,7 @@ def counter_viev():
 
 @app.options("/method")
 def method_view():
-    return {"method": "options"}
+    return {"method": "OPTIONS"}
 
 
 @app.get("/auth")

@@ -55,7 +55,7 @@ def test_counter():
 def test_method():
     response = client.options("/method")
     assert response.status_code == 200
-    assert response.json() == {"method": "options"}
+    assert response.json() == {"method": "OPTIONS"}
 
 
 @pytest.mark.parametrize(
