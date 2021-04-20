@@ -1,6 +1,6 @@
 import pytest
 
-from myservices.methods_for_main import get_hash
+from myservices.methods_for_main import get_hash, get_len
 
 
 @pytest.mark.parametrize(
@@ -18,3 +18,15 @@ from myservices.methods_for_main import get_hash
 )
 def test_check_password(password: str, password_hash: str):
     assert password_hash == get_hash(password)
+
+
+@pytest.mark.parametrize(
+    ['name', 'surname', 'sum_len'],
+    [
+        ['ąć ', '', 2],
+        ['', 'aó-AóÓ', 5],
+        ['!@#$%^&*()_+', '0123456789', 0]
+    ]
+)
+def test_get_len(name: str, surname: str, sum_len: int):
+    assert get_len(name, surname) == sum_len

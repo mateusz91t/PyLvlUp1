@@ -5,7 +5,7 @@ from fastapi import FastAPI, Response
 from starlette.responses import JSONResponse
 
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
-from myservices.methods_for_main import count, get_hash
+from myservices.methods_for_main import count, get_hash, get_len
 
 app = FastAPI()
 app.counter = count()
@@ -75,11 +75,11 @@ def register_view(request: ToRegisterResponse):
     name = request.name
     surname = request.surname
     r_date = dt.date(dt.now())
-    v_date = r_date + timedelta(len(name) + len(surname))
+    v_date = r_date + timedelta(get_len(name, surname))
     request_out = PatientResponse(
         id=key,
-        name=request.name,
-        surname=request.surname,
+        name=name,
+        surname=surname,
         register_date=str(r_date),
         vaccination_date=str(v_date)
     )

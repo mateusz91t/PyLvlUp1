@@ -16,14 +16,14 @@ client.counter = 0
 today = datetime.date.today()
 json_to_register = {
     "name": "Jan",
-    "surname": "Kowalski"
+    "surname": "Kowalski-Żądło"
 }
 json_registered = {
     "id": 1,
     "name": "Jan",
-    "surname": "Kowalski",
+    "surname": "Kowalski-Żądło",
     "register_date": str(today),
-    "vaccination_date": str(today + datetime.timedelta(11))
+    "vaccination_date": str(today + datetime.timedelta(16))
 }
 
 
