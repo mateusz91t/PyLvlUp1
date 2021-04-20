@@ -18,7 +18,7 @@ app.patient = dict()
 
 @app.get('/')
 def root_view():
-    return {'message': "Hello"}
+    return {'message': 'Hello world!'}
 
 
 @app.get("/hello/{name}", response_model=HelloNameResponse)
