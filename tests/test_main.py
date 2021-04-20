@@ -30,7 +30,7 @@ json_registered = {
 def test_hello():
     response = client.get('/')
     assert response.status_code == 200
-    assert response.json() == {'message': 'Hello'}
+    assert response.json() == {'message': 'Hello world!'}
 
 
 @pytest.mark.parametrize('name', ['Zenek', 'Janek', 'Matt', '12312@! 1'])
