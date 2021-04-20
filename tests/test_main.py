@@ -83,19 +83,18 @@ def test_method_post():
 
 
 @pytest.mark.parametrize(
-    ['password', 'password_hash'],
+    ['password', 'password_hash', 'result'],
     [
-        ['abc', get_hash('abc')],
-        ['haslo', 'zahaszowane_haslo']
+        ['abc', get_hash('abc'), 204],
+        ['haslo', 'zahaszowane_haslo', 401],
+        ['', '', 401],
+        ['', 'cos', 401],
+        ['cos', '', 401]
     ]
 )
-def test_auth(password: str, password_hash: str):
+def test_auth(password: str, password_hash: str, result: int):
     response = client.get(f"/auth?password={password}&password_hash={password_hash}")
-    if password_hash == get_hash(password):
-        assert response.status_code == 204
-        print(response.raw)
-    else:
-        assert response.status_code == 401
+    assert response.status_code == result
 
 
 @pytest.mark.parametrize(
