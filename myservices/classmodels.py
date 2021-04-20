@@ -5,7 +5,7 @@ class HelloNameResponse(BaseModel):
     message: str
 
 
-class RegisteredResponse(BaseModel):
+class PatientResponse(BaseModel):
     id: int
     name: str
     surname: str
