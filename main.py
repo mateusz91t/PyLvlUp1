@@ -1,6 +1,7 @@
 from datetime import datetime as dt, timedelta
+from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from starlette.responses import JSONResponse
 
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
@@ -57,17 +58,15 @@ def method_view():
 
 
 @app.get("/auth")
-def auth_view(password: str, password_hash: str):
+def auth_view(password: str = '', password_hash: str = ''):
     hashed = get_hash(password) == password_hash
     print(password)
     print(password_hash)
     if hashed and password and password_hash:
-        response = JSONResponse()
-        response.status_code = 204
-        response.body = b''
-        return response
+        status_code = 204
     else:
-        return JSONResponse(status_code=401)
+        status_code = 401
+    return Response(status_code=status_code)
 
 
 @app.post("/register", status_code=201, response_model=PatientResponse)
