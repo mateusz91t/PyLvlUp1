@@ -95,6 +95,8 @@ def test_method_post():
 def test_auth(password: str, password_hash: str, result: int):
     response = client.get(f"/auth?password={password}&password_hash={password_hash}")
     assert response.status_code == result
+    if result == 204:
+        assert not response.content
 
 
 @pytest.mark.parametrize(
