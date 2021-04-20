@@ -59,7 +59,10 @@ def method_view():
 @app.get("/auth")
 def auth_view(password: str, password_hash: str):
     hashed = get_hash(password) == password_hash
-    if hashed and password != '' and password_hash != '':
+    # check_password = password and password.c
+    print(password)
+    print(password_hash)
+    if password and hashed:
         response = JSONResponse()
         response.status_code = 204
         response.body = b''
