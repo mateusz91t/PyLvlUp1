@@ -36,6 +36,26 @@ def method_view():
     return {"method": "OPTIONS"}
 
 
+@app.get("/method")
+def method_view():
+    return {"method": "GET"}
+
+
+@app.delete("/method")
+def method_view():
+    return {"method": "DELETE"}
+
+
+@app.put("/method")
+def method_view():
+    return {"method": "PUT"}
+
+
+@app.post("/method", status_code=201)
+def method_view():
+    return {"method": "POST"}
+
+
 @app.get("/auth")
 def auth_view(password: str, password_hash: str):
     hashed = get_hash(password) == password_hash

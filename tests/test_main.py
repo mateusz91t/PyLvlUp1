@@ -52,10 +52,34 @@ def test_counter():
     assert response.text == '2'
 
 
-def test_method():
+def test_method_options():
     response = client.options("/method")
     assert response.status_code == 200
     assert response.json() == {"method": "OPTIONS"}
+
+
+def test_method_get():
+    response = client.get("/method")
+    assert response.status_code == 200
+    assert response.json() == {"method": "GET"}
+
+
+def test_method_delete():
+    response = client.delete("/method")
+    assert response.status_code == 200
+    assert response.json() == {"method": "DELETE"}
+
+
+def test_method_put():
+    response = client.put("/method")
+    assert response.status_code == 200
+    assert response.json() == {"method": "PUT"}
+
+
+def test_method_post():
+    response = client.post("/method")
+    assert response.status_code == 201
+    assert response.json() == {"method": "POST"}
 
 
 @pytest.mark.parametrize(
