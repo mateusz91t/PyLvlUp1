@@ -1,6 +1,6 @@
 from datetime import datetime as dt, timedelta
 
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, Request
 from starlette.responses import JSONResponse
 
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
@@ -31,29 +31,10 @@ def counter_viev():
     return next(app.counter)
 
 
-@app.options("/method")
-def method_view():
-    return {"method": "OPTIONS"}
-
-
-@app.get("/method")
-def method_view():
-    return {"method": "GET"}
-
-
-@app.delete("/method")
-def method_view():
-    return {"method": "DELETE"}
-
-
-@app.put("/method")
-def method_view():
-    return {"method": "PUT"}
-
-
 @app.post("/method", status_code=201)
-def method_view():
-    return {"method": "POST"}
+@app.api_route(path="/method", methods=["OPTIONS", "GET", "DELETE", "PUT"], )
+def method_view(request: Request):
+    return {"method": request.method}
 
 
 @app.get("/auth")

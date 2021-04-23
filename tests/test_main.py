@@ -52,34 +52,21 @@ def test_counter():
     assert response.text == '2'
 
 
-def test_method_options():
-    response = client.options("/method")
-    assert response.status_code == 200
-    assert response.json() == {"method": "OPTIONS"}
-
-
-def test_method_get():
-    response = client.get("/method")
-    assert response.status_code == 200
-    assert response.json() == {"method": "GET"}
-
-
-def test_method_delete():
-    response = client.delete("/method")
-    assert response.status_code == 200
-    assert response.json() == {"method": "DELETE"}
-
-
-def test_method_put():
-    response = client.put("/method")
-    assert response.status_code == 200
-    assert response.json() == {"method": "PUT"}
-
-
-def test_method_post():
-    response = client.post("/method")
-    assert response.status_code == 201
-    assert response.json() == {"method": "POST"}
+def test_method():
+    endpoint = "/method"
+    methods_to_test = dict(
+        GET=200,
+        POST=201,
+        PUT=200,
+        DELETE=200,
+        OPTIONS=200
+    )
+    requests_to_test = [client.request(method=meth, url=endpoint)
+                        for meth
+                        in methods_to_test.keys()]
+    for req in requests_to_test:
+        assert req.status_code == methods_to_test[req.request.method]
+        assert req.json() == dict(method=req.request.method)
 
 
 @pytest.mark.parametrize(
