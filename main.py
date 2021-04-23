@@ -1,5 +1,4 @@
 from datetime import datetime as dt, timedelta
-from typing import Optional
 
 from fastapi import FastAPI, Response
 from starlette.responses import JSONResponse

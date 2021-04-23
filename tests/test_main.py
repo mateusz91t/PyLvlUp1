@@ -120,7 +120,7 @@ def test_register_view(json_in, json_out):
 
 @pytest.fixture
 def set_patient():
-    response = client.post("/register", json=json_to_register)
+    client.post("/register", json=json_to_register)
 
 
 @pytest.mark.parametrize(
