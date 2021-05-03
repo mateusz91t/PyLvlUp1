@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>Order details</title>
+    </head>
+    <body>
+        <div class="container">
+            <p>My string: {{ my_string }}</p>
+            <p>Value from my list: {{ my_list[3] }}</p>
+            <p>Loop through the list:</p>
+            <ul>
+                {% for element in my_list %}
+                <li>{{ element + 0.1 * 3 }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>

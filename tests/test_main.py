@@ -3,7 +3,7 @@ import datetime
 import pytest
 from fastapi.testclient import TestClient
 
-from main import app
+from views.main import app
 from myservices.methods_for_main import get_hash
 
 client = TestClient(app)
