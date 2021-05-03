@@ -1,9 +1,7 @@
 from datetime import datetime as dt, timedelta
-from typing import List
 
-from fastapi import FastAPI, Response, Request, Query
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Response, Request
+from fastapi.responses import JSONResponse
 from fastapi_mako import FastAPIMako
 
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
@@ -13,8 +11,6 @@ app = FastAPI()
 app.counter = count()
 app.register_counter = count()
 app.patient = dict()
-
-templates = Jinja2Templates(directory='templates')
 
 app.__name__ = 'templates'
 mako = FastAPIMako(app)
@@ -92,56 +88,3 @@ def patient_view(id: int):
         return response
     else:
         return JSONResponse(status_code=404, content="not found your patient id")
-
-
-# lecture #2
-@app.get("/request_query_string_discovery/")
-def get_all_query_params(request: Request):
-    qp = request.query_params
-    print(f"{qp = }")
-    return qp
-
-
-@app.get("/request_query_string_discovery2/")
-def get_all_query_params2(u: str = Query("default"), q: List[int] = Query(None)):
-    query_items = {"q": q, "u": u}
-    return query_items
-
-
-@app.get("/static", response_class=HTMLResponse)
-def get_static():
-    return """
-    <html>
-        <head>
-            <title>Statyczna stronka</title>
-        </head>
-        <body>
-            <h1>Look at me! HTML!!</h1>
-        </body>
-    </html>"""
-
-
-@app.get("/jinja2")
-def get_jinja_html(request: Request):
-    return templates.TemplateResponse(
-        "index.html.j2",
-        {"request": request, "my_string": "Wheeeee!", "my_list": [0, 1, 2, 3, 4, 5]})
-
-
-@app.get("/mako", response_class=HTMLResponse)
-@mako.template('index.html.mako')
-def get_mako_html(request: Request):
-    setattr(request, 'mako', 'test')
-    return {"my_string": "Wheeeee!", "my_list": [0, 1, 2, 3, 4, 5]}
-
-
-@app.get("/sample_path/{sample_value}")
-def get_sample_path_json(sample_value: int):
-    print(f"{sample_value = }")
-    print(type(sample_value))
-    return {'sample_value': sample_value}
-
-
-@app.get("/fip/{file_path:path}")
-def get_file_path(file_path: str):
-    return dict(file_path=file_path)
