@@ -1,16 +1,24 @@
 from datetime import datetime as dt, timedelta
 
 from fastapi import FastAPI, Response, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi_mako import FastAPIMako
 
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
 from myservices.methods_for_main import count, get_hash, get_len
+from views.lecture2 import lecture2
 
 app = FastAPI()
+
 app.counter = count()
 app.register_counter = count()
 app.patient = dict()
+
+app.include_router(
+    lecture2,
+    prefix="/lec2",
+    tags=["lecture2"]
+)
 
 app.__name__ = 'templates'
 mako = FastAPIMako(app)
@@ -18,6 +26,7 @@ mako = FastAPIMako(app)
 
 # to run type:
 # uvicorn main:app
+# uvicorn views.main:app --reload
 
 
 @app.get('/')
@@ -88,3 +97,12 @@ def patient_view(id: int):
         return response
     else:
         return JSONResponse(status_code=404, content="not found your patient id")
+
+
+# how to move up this to other file?
+# http://127.0.0.1:8000/lec2/mako
+@app.get("/mako", response_class=HTMLResponse)
+@mako.template('index.html.mako')
+def get_mako_html(request: Request):
+    setattr(request, 'mako', 'test')
+    return {"my_string": "Wheeeee!", "my_list": [0, 1, 2, 3, 4, 5]}

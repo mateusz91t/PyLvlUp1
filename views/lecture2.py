@@ -3,14 +3,10 @@ from typing import List
 from fastapi import Request, Query, APIRouter
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi_mako import FastAPIMako
 
 lecture2 = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
-
-lecture2.__name__ = 'templates'
-mako = FastAPIMako(lecture2)
 
 
 # http://127.0.0.1:8000/lec2/request_query_string_discovery/?asd=2&aac=abc
