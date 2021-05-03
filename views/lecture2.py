@@ -1,6 +1,7 @@
+from hashlib import sha256
 from typing import List
 
-from fastapi import Request, Query, APIRouter
+from fastapi import Request, Query, APIRouter, Response, Cookie, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -8,6 +9,8 @@ lecture2 = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
 
+lecture2.secret_key = "secret should be long because it is more secjurne"
+lecture2.access_tokens = list()
 
 # http://127.0.0.1:8000/lec2/request_query_string_discovery/?asd=2&aac=abc
 @lecture2.get("/request_query_string_discovery/")
@@ -46,7 +49,7 @@ def get_jinja_html(request: Request):
         {"request": request, "my_string": "Wheeeee!", "my_list": [0, 1, 2, 3, 4, 5]})
 
 
-# 127.0.0.1:8000/lec2/sample_path/1123
+# http://127.0.0.1:8000/lec2/sample_path/1123
 @lecture2.get("/sample_path/{sample_value}")
 def get_sample_path_json(sample_value: int):
     print(f"{sample_value = }")
@@ -58,3 +61,22 @@ def get_sample_path_json(sample_value: int):
 @lecture2.get("/fip/{file_path:path}")
 def get_file_path(file_path: str):
     return dict(file_path=file_path)
+
+
+# http://127.0.0.1:8000/lec2/login?user=abc&password=bcd
+@lecture2.get("/login")
+def get_login(user: str, password: str, response: Response):
+    session_token = sha256(f"{user}:{password}{lecture2.secret_key}".encode()).hexdigest()
+    lecture2.access_tokens.append(session_token)
+    response.set_cookie(key="session_token", value=session_token)
+    print(f"{session_token = }")
+    return dict(message='Welcome')
+
+
+# curl -X 'GET' 'http://127.0.0.1:8000/lec2/data' -H 'accept: application/json' -H 'Cookie: session_token=d9cb503f61d7b77ede3821ecc11c28524d90807444085b466ca8dc9df59e992b'
+@lecture2.get("/data")
+def get_secured_data(*, response: Response, session_token: str = Cookie(None)):
+    if session_token not in lecture2.access_tokens:
+        raise HTTPException(status_code=403, detail='Unauthorized')
+    else:
+        return dict(message="Secure Content")
