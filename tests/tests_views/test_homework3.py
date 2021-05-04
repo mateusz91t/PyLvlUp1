@@ -11,9 +11,6 @@ from views.main import app
 client = TestClient(app)
 client.counter = 0
 login, passw = "4dm1n", "NotSoSecurePa$$"
-str_log_ps = f"{login}:{passw}"
-b64_str = base64.b64encode(str_log_ps.encode(encoding='utf-8'))
-token_value = "xyz"  # todo change token to sha256
 token_hex = '773a7c51290f6448f44d25ae8bb330a6656940bce8fd54215ed3c270a67953bd'
 
 
@@ -22,16 +19,6 @@ def test_get_hello_html():
     assert response.status_code == 200
     assert response.text.find(f"<h1>Hello! Today date is {date.today()}</h1>") > 0
     assert bool(BeautifulSoup(response.text, 'html.parser').find())
-
-
-def x_test_post_login_session():
-    response = client.post(
-        "/login_session",
-        headers={"Authorization": f"Basic {b64_str}"}
-    )
-    cookie = response.cookies.get("session_token")
-    assert response.status_code == 201
-    assert bool(cookie)
 
 
 @pytest.mark.parametrize(
@@ -61,3 +48,30 @@ def test_post_login_token(response, code):
     print(f"{response.json() = }")
     assert response.status_code == code
     # assert response.json() == {"token": token_hex}
+
+
+def test_get_welcome_session():
+    response = client.get('/welcome_session', cookies=dict())
+    coo1 = response.cookies.get('session_token')
+    assert not coo1
+    # assert response.status_code == 401
+    client.post("/login_token", auth=HTTPBasicAuth(login, passw))
+    response_get = client.get('/welcome_session',
+                              cookies=dict(session_token=token_hex))
+    coo2 = response_get.cookies.get('session_token')
+    assert response_get.status_code == 200
+    assert coo2 == token_hex
+
+
+# @pytest.mark.parametrize(
+#     ['code', 'post', 'get'],
+#     [
+#         [401, client.post("/login_token"), client.get('/welcome_session')],
+#         [201,
+#          client.post("/login_token", auth=HTTPBasicAuth(login, passw)),
+#          client.get(f'/welcome_session?token={token_hex}')]
+#     ]
+# )
+# def test_get_welcome_token(code, post, get):
+#     assert get.status_code == code
+#     # assert

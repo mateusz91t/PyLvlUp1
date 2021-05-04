@@ -1,6 +1,7 @@
 import encodings
 import hashlib
 import re
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 
 def count():
@@ -27,7 +28,13 @@ def get_token_hex(login: str, password: str, secret_key: str) -> str:
     token_str = f"{login}:{password}|{secret_key}"
     token_encoded = token_str.encode()
     token_hex = hashlib.sha256(token_encoded).hexdigest()
-    print(token_str)
-    print(token_encoded)
-    print(token_hex)
     return token_hex
+
+
+def get_response_by_format(format: str = ''):
+    if format == 'json':
+        return {"message": "Welcome!"}
+    elif format == 'html':
+        return HTMLResponse(content="<h1>Welcome!</h1>")
+    else:
+        return PlainTextResponse(content="Welcome!")
