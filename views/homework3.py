@@ -35,10 +35,11 @@ def post_login_session(response: Response, credentials: HTTPBasicCredentials = D
         response.set_cookie(key='session_token', value=token_hex)
         if len(homework3.saved_sessions) > 3:
             del homework3.saved_sessions[0]
-            homework3.saved_sessions.append(token_hex)
+        homework3.saved_sessions.append(token_hex)
     else:
         response.status_code = 401
         raise HTTPException(status_code=401)
+    print(homework3.saved_sessions)
 
 
 @homework3.post("/login_token", status_code=201)
@@ -47,19 +48,19 @@ def post_login_token(response: Response, credentials: HTTPBasicCredentials = Dep
         token_hex = get_token_hex(credentials.username, credentials.password, homework3.secret_key)
         if len(homework3.saved_tokens) > 3:
             del homework3.saved_tokens[0]
-            homework3.saved_tokens.append(token_hex)
+        homework3.saved_tokens.append(token_hex)
     else:
         response.status_code = 401
         raise HTTPException(status_code=401)
+    print(homework3.saved_tokens)
     return {"token": token_hex}
 
 
 @homework3.get('/welcome_session')
 def get_welcome_session(response: Response, session_token: str = Cookie(None), format: str = ""):
-    # print(session_token)
-    # print(homework3.saved_sessions)
     if session_token not in homework3.saved_sessions:
         raise HTTPException(status_code=401)
+    print(homework3.saved_sessions)
     return get_response_by_format(format)
 
 
@@ -67,6 +68,7 @@ def get_welcome_session(response: Response, session_token: str = Cookie(None), f
 def get_welcome_session(response: Response, token: str, format: str = ""):
     if token not in homework3.saved_tokens:
         raise HTTPException(status_code=401)
+    print(homework3.saved_tokens)
     return get_response_by_format(format)
 
 
@@ -75,6 +77,7 @@ def logout_session(session_token: str = Cookie(None), format: str = ""):
     if session_token not in homework3.saved_sessions:
         raise HTTPException(status_code=401)
     homework3.saved_sessions.remove(session_token)
+    print(homework3.saved_sessions)
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 
@@ -83,9 +86,11 @@ def logout_token(session_token: str, format: str = ""):
     if session_token not in homework3.saved_tokens:
         raise HTTPException(status_code=401)
     homework3.saved_tokens.remove(session_token)
+    print(homework3.saved_tokens)
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 
-@homework3.get("/logged_out", status_code=200)
+@homework3.delete("/logged_out", status_code=200)
+@homework3.get("/logged_out")
 def logged_out(format: str = ""):
     return get_response_by_format(format, 'Logged out!')
