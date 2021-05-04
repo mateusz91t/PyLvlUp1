@@ -1,7 +1,7 @@
 from datetime import date
 
-from fastapi import APIRouter, Request, Response, Cookie, HTTPException
-from fastapi.security import HTTPBasicCredentials
+from fastapi import APIRouter, Request, Response, Cookie, HTTPException, Depends
+from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from fastapi.templating import Jinja2Templates
 
 from myservices.auxiliary_methods import get_token_hex
@@ -9,6 +9,8 @@ from myservices.auxiliary_methods import get_token_hex
 homework3 = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
+
+basic = HTTPBasic()
 
 homework3.secret_key = "secret should be long because it is more secjurne"
 login = '4dm1n'
@@ -27,7 +29,7 @@ def get_hello_html(request: Request):
 
 
 @homework3.post("/login_session", status_code=201)
-def post_login_session(response: Response, credentials: HTTPBasicCredentials):
+def post_login_session(response: Response, credentials: HTTPBasicCredentials = Depends(basic)):
     print(credentials)
     if credentials.username != login or credentials.password != password:
         response.status_code = 401
@@ -46,7 +48,7 @@ def post_login_session(response: Response, credentials: HTTPBasicCredentials):
 
 
 @homework3.post("/login_token", status_code=201)
-def post_login_token(response: Response, credentials: HTTPBasicCredentials):
+def post_login_token(response: Response, credentials: HTTPBasicCredentials = Depends(basic)):
     print(credentials)
     if credentials.username == login and credentials.password == password:
         token_hex = get_token_hex(credentials.username, credentials.password, homework3.secret_key)
