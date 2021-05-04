@@ -1,6 +1,7 @@
 from datetime import date
 
 from fastapi import APIRouter, Request, Response, Cookie, HTTPException, Depends
+from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from fastapi.templating import Jinja2Templates
 
@@ -63,3 +64,24 @@ def get_welcome_session(response: Response, token: str, format: str = ""):
     if token != homework3.saved_token:
         raise HTTPException(status_code=401)
     return get_response_by_format(format)
+
+
+@homework3.delete("/logout_session")
+def logout_session(session_token: str = Cookie(None), format: str = ""):
+    if session_token != homework3.saved_session:
+        raise HTTPException(status_code=401)
+    homework3.saved_session = ''
+    return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
+
+
+@homework3.delete("/logout_token")
+def logout_token(session_token: str, format: str = ""):
+    if session_token != homework3.saved_token:
+        raise HTTPException(status_code=401)
+    homework3.saved_token = ''
+    return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
+
+
+@homework3.get("/logged_out", status_code=200)
+def logged_out(format: str = ""):
+    return get_response_by_format(format, 'Logged out!')

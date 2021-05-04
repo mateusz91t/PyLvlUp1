@@ -31,10 +31,10 @@ def get_token_hex(login: str, password: str, secret_key: str) -> str:
     return token_hex
 
 
-def get_response_by_format(format: str = ''):
+def get_response_by_format(format: str = '', message: str = 'Welcome!'):
     if format == 'json':
-        return {"message": "Welcome!"}
+        return {"message": f"{message}"}
     elif format == 'html':
-        return HTMLResponse(content="<h1>Welcome!</h1>")
+        return HTMLResponse(content=f"<h1>{message}</h1>")
     else:
-        return PlainTextResponse(content="Welcome!")
+        return PlainTextResponse(content=f"{message}")

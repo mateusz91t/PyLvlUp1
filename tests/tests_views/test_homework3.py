@@ -50,17 +50,17 @@ def test_post_login_token(response, code):
     # assert response.json() == {"token": token_hex}
 
 
-def test_get_welcome_session():
-    response = client.get('/welcome_session', cookies=dict())
-    coo1 = response.cookies.get('session_token')
-    assert not coo1
-    # assert response.status_code == 401
-    client.post("/login_token", auth=HTTPBasicAuth(login, passw))
-    response_get = client.get('/welcome_session',
-                              cookies=dict(session_token=token_hex))
-    coo2 = response_get.cookies.get('session_token')
-    assert response_get.status_code == 200
-    assert coo2 == token_hex
+# def test_get_welcome_session():
+#     response = client.get('/welcome_session', cookies=dict())
+#     coo1 = response.cookies.get('session_token')
+#     assert not coo1
+#     # assert response.status_code == 401
+#     client.post("/login_token", auth=HTTPBasicAuth(login, passw))
+#     response_get = client.get('/welcome_session',
+#                               cookies=dict(session_token=token_hex))
+#     coo2 = response_get.cookies.get('session_token')
+#     assert response_get.status_code == 200
+#     assert coo2 == token_hex
 
 
 # @pytest.mark.parametrize(
