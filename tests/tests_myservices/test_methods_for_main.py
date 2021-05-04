@@ -1,6 +1,6 @@
 import pytest
 
-from myservices.methods_for_main import get_hash, get_len
+from myservices.auxiliary_methods import get_hash, get_len
 
 
 @pytest.mark.parametrize(

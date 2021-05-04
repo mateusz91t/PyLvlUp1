@@ -1,11 +1,17 @@
 from datetime import date
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Response, Cookie
+from fastapi.security import HTTPBasicCredentials
 from fastapi.templating import Jinja2Templates
+
+from myservices.auxiliary_methods import get_token_hex
 
 homework3 = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
+
+homework3.secret_key = "secret should be long because it is more secjurne"
+homework3.saved_token = None
 
 
 # http://127.0.0.1:8000/hello
@@ -15,3 +21,36 @@ def get_hello_html(request: Request):
         "hello.html.j2",
         dict(request=request, tdate=str(date.today()))
     )
+
+
+@homework3.post("/login_session", status_code=201)
+def post_login_session(response: Response, credentials: HTTPBasicCredentials):
+    print(credentials)
+    if credentials.username == '4dm1n' and credentials.password == 'NotSoSecurePa$$':
+        token_hex = get_token_hex(credentials.username, credentials.password, homework3.secret_key)
+        response.set_cookie(
+            key='session_token',
+            value=token_hex
+        )
+        homework3.saved_token = token_hex
+    else:
+        response.status_code = 401
+    return dict(response=response, credentials=credentials)
+
+
+# @homework3.post("/login_session")
+# def post_login_session(auth_header: Optional[str] = Header(None)):
+#     print(auth_header)
+#     # print(request.headers)
+#     return dict(header=auth_header)
+
+
+@homework3.post("/login_token", status_code=201)
+def post_login_token(*, response: Response, session_token: str = Cookie(None)):
+    print("session_token vs homework3.saved_token")
+    print(session_token)
+    print(homework3.saved_token)
+    if session_token == homework3.saved_token:
+        return dict(token=session_token)
+    else:
+        response.status_code = 401
