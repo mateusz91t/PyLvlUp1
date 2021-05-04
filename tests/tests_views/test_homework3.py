@@ -4,6 +4,7 @@ from datetime import date
 import pytest
 from bs4 import BeautifulSoup
 from fastapi.testclient import TestClient
+from requests.auth import HTTPBasicAuth
 
 from views.main import app
 
@@ -34,14 +35,14 @@ def x_test_post_login_session():
 
 
 @pytest.mark.parametrize(
-    ['json', 'code', 'cookie'],
+    ['user', 'password', 'code', 'cookie'],
     [
-        [dict(username=login, password=passw), 201, token_hex],
-        [dict(username="abc", password="cde"), 401, None]
+        [login, passw, 201, token_hex],
+        ["abc", "cde", 401, None]
     ]
 )
-def test_post_login_session(json, code, cookie):
-    response = client.post("/login_session", json=json)
+def test_post_login_session(user, password, code, cookie):
+    response = client.post("/login_session", auth=HTTPBasicAuth(user, password))
     coo = response.cookies.get("session_token")
     assert response.status_code == code
     assert coo == cookie
@@ -51,12 +52,12 @@ def test_post_login_session(json, code, cookie):
     ['response', 'code'],
     [
         [client.post("/login_token"), 401],
-        [client.post("/login_token", cookies=dict(session_token=token_hex)), 201]
+        [client.post("/login_token", auth=HTTPBasicAuth(login, passw)), 201]
     ]
 )
 def test_post_login_token(response, code):
     print(f"{response.status_code = }")
-    print(f"{response.json = }")
     print(f"{code = }")
+    print(f"{response.json() = }")
     assert response.status_code == code
     # assert response.json() == {"token": token_hex}

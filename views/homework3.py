@@ -37,7 +37,6 @@ def post_login_session(response: Response, credentials: HTTPBasicCredentials = D
     else:
         response.status_code = 401
         raise HTTPException(status_code=401)
-    return response
 
 # @homework3.post("/login_session")
 # def post_login_session(auth_header: Optional[str] = Header(None)):
