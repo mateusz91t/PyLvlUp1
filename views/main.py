@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi_mako import FastAPIMako
 
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
-from myservices.methods_for_main import count, get_hash, get_len
+from myservices.auxiliary_methods import count, get_hash, get_len
 from views.homework3 import homework3
 from views.lecture3 import lecture2
 

@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from views.main import app
-from myservices.methods_for_main import get_hash
+from myservices.auxiliary_methods import get_hash
 
 client = TestClient(app)
 client.counter = 0
