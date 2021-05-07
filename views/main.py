@@ -8,6 +8,7 @@ from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegiste
 from myservices.auxiliary_methods import count, get_hash, get_len
 from views.homework3 import homework3
 from views.lecture3 import lecture2
+from views.lecture4 import lecture4
 
 app = FastAPI()
 
@@ -27,6 +28,12 @@ mako = FastAPIMako(app)
 app.include_router(
     homework3,
     tags=["homework2"]
+)
+
+app.include_router(
+    lecture4,
+    prefix="/lec4",
+    tags=["lecture4"]
 )
 
 # to run type:
