@@ -7,6 +7,7 @@ from fastapi_mako import FastAPIMako
 from myservices.classmodels import HelloNameResponse, PatientResponse, ToRegisterResponse
 from myservices.auxiliary_methods import count, get_hash, get_len
 from views.homework3 import homework3
+from views.homework4 import homework4
 from views.lecture3 import lecture2
 from views.lecture4 import lecture4
 
@@ -16,25 +17,15 @@ app.counter = count()
 app.register_counter = count()
 app.patient = dict()
 
-app.include_router(
-    lecture2,
-    prefix="/lec2",
-    tags=["lecture2"]
-)
+app.include_router(lecture2, prefix="/lec2", tags=["lecture2"])
 
 app.__name__ = 'templates'
 mako = FastAPIMako(app)
 
-app.include_router(
-    homework3,
-    tags=["homework2"]
-)
+app.include_router(homework3, tags=["homework2"])
+app.include_router(lecture4, prefix="/lec4", tags=["lecture4"])
+app.include_router(homework4, tags=["homework4"])
 
-app.include_router(
-    lecture4,
-    prefix="/lec4",
-    tags=["lecture4"]
-)
 
 # to run type:
 # uvicorn main:app
