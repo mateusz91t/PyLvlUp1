@@ -19,7 +19,7 @@ async def shutdown():
 @homework4.get("/categories")
 async def get_categories():
     cursor = homework4.dbc.cursor()
-    categories = cursor.execute("SELECT  CategoryID, CategoryName FROM Categories").fetchall()
+    categories = cursor.execute("SELECT  CategoryID, CategoryName FROM Categories ORDER BY CategoryID").fetchall()
     output = dict(categories=[dict(id=row[0], name=row[1]) for row in categories])
     return output
 
@@ -31,5 +31,5 @@ async def get_customers():
     customers = cursor.execute("SELECT rtrim(CustomerID) id, "
                                 "rtrim(CompanyName) name, "
                                 "rtrim(Address || ' ' || PostalCode || ' ' || City || ' ' || Country) full_address "
-                                "FROM Customers c").fetchall()
+                                "FROM Customers c ORDER BY CustomerID").fetchall()
     return dict(categories=customers)
