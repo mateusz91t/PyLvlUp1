@@ -30,15 +30,16 @@ async def get_customers():
     cursor = homework4.dbc.cursor()
     cursor.row_factory = sqlite3.Row
     customers = cursor.execute(
-        "SELECT rtrim(CustomerID) id, "
-        "rtrim(COALESCE(CompanyName, '')) name, "
-        "CASE "
-        "   TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
-        "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) "
-        "   WHEN  '' THEN NULL "
-        "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
-        "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
-        "END full_address FROM Customers c ORDER BY UPPER(CustomerID);"
+        # "SELECT rtrim(CustomerID) id, "
+        # "rtrim(COALESCE(CompanyName, '')) name, "
+        # "CASE "
+        # "   TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
+        # "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) "
+        # "   WHEN  '' THEN NULL "
+        # "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
+        # "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
+        # "END full_address FROM Customers c ORDER BY UPPER(CustomerID);"
+        "SELECT rtrim(CustomerID) id, rtrim(COALESCE(CompanyName, '')) name, TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) full_address FROM Customers c ORDER BY UPPER(CustomerID);"
     ).fetchall()
     return dict(customers=customers)
 
