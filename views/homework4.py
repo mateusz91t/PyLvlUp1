@@ -32,4 +32,4 @@ async def get_customers():
                                 "rtrim(CompanyName) name, "
                                 "rtrim(Address || ' ' || PostalCode || ' ' || City || ' ' || Country) full_address "
                                 "FROM Customers c ORDER BY CustomerID").fetchall()
-    return dict(categories=customers)
+    return dict(customers=customers)
