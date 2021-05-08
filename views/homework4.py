@@ -3,6 +3,7 @@ import sqlite3
 from fastapi import APIRouter, HTTPException
 
 homework4 = APIRouter()
+emp_orders = {'first_name', 'last_name', 'city', ''}
 
 
 @homework4.on_event("startup")
@@ -37,7 +38,7 @@ async def get_customers():
         "   WHEN  '' THEN NULL "
         "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
         "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
-        "END full_address FROM Customers c ORDER BY CustomerID;"
+        "END full_address FROM Customers c ORDER BY UPPER(CustomerID);"
     ).fetchall()
     return dict(customers=customers)
 
@@ -55,3 +56,12 @@ async def get_product(id: int):
     if not product:
         raise HTTPException(status_code=404, detail="Id not found")
     return product
+
+
+@homework4.get("/employees")
+async def get_employees(limit: int = -1, offset: int = 0, order: str = ''):
+    order = order.strip()
+    print(f"{limit = }", f"{offset = }", f"{order = }")
+    if not isinstance(limit, int) or not isinstance(offset, int) or order not in emp_orders:
+        raise HTTPException(status_code=400)
+    return dict(out='ok')
