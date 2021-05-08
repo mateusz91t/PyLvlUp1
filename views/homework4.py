@@ -3,7 +3,6 @@ import sqlite3
 from fastapi import APIRouter, HTTPException
 
 homework4 = APIRouter()
-emp_orders = {'first_name', 'last_name', 'city', ''}
 
 
 @homework4.on_event("startup")
@@ -30,16 +29,15 @@ async def get_customers():
     cursor = homework4.dbc.cursor()
     cursor.row_factory = sqlite3.Row
     customers = cursor.execute(
-        # "SELECT rtrim(CustomerID) id, "
-        # "rtrim(COALESCE(CompanyName, '')) name, "
-        # "CASE "
-        # "   TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
-        # "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) "
-        # "   WHEN  '' THEN NULL "
-        # "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
-        # "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
-        # "END full_address FROM Customers c ORDER BY UPPER(CustomerID);"
-        "SELECT rtrim(CustomerID) id, rtrim(COALESCE(CompanyName, '')) name, TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) full_address FROM Customers c --ORDER BY UPPER(CustomerID);"
+        "SELECT rtrim(CustomerID) id, "
+        "rtrim(COALESCE(CompanyName, '')) name, "
+        "CASE "
+        "   TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
+        "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) "
+        "   WHEN  '' THEN NULL "
+        "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
+        "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
+        "END full_address FROM Customers c ORDER BY CustomerID;"
     ).fetchall()
     return dict(customers=customers)
 
@@ -57,12 +55,3 @@ async def get_product(id: int):
     if not product:
         raise HTTPException(status_code=404, detail="Id not found")
     return product
-
-
-@homework4.get("/employees")
-async def get_employees(limit: int = -1, offset: int = 0, order: str = ''):
-    order = order.strip()
-    print(f"{limit = }", f"{offset = }", f"{order = }")
-    if not isinstance(limit, int) or not isinstance(offset, int) or order not in emp_orders:
-        raise HTTPException(status_code=400)
-    return dict(out='ok')

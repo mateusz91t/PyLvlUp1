@@ -31,10 +31,10 @@ def test_get_customers(test_client):
     [
         [1, {"id": 1, "name": "Chai"}, 200],
         [63, {"id": 63, "name": 'Vegie-spread'}, 200],
-        # ['avc', {"detail": "Id not found"}, 404],  # there is 422
+        # ['avc', {"detail": "Id not found"}, 404],
         [9999, {"detail": "Id not found"}, 404],
         [-22, {"detail": "Id not found"}, 404],
-        # [0.2, {"detail": "Id not found"}, 404],  # there is 422
+        # [0.2, {"detail": "Id not found"}, 404],
     ]
 )
 def test_get_products(test_client, p_id, output, s_code):
