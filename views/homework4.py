@@ -30,8 +30,13 @@ async def get_customers():
     cursor.row_factory = sqlite3.Row
     customers = cursor.execute(
         "SELECT rtrim(CustomerID) id, "
-        "rtrim(COALESCE(CompanyName, '')) name, rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) "
-        "|| ' ' || rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) full_address "
-        "FROM Customers c ORDER BY CustomerID"
+        "rtrim(COALESCE(CompanyName, '')) name, "
+        "CASE "
+        "   TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
+        "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) "
+        "   WHEN  '' THEN NULL "
+        "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
+        "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
+        "END full_address FROM Customers c ORDER BY CustomerID;"
     ).fetchall()
     return dict(customers=customers)
