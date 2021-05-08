@@ -1,6 +1,6 @@
 import sqlite3
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 homework4 = APIRouter()
 
@@ -40,3 +40,18 @@ async def get_customers():
         "END full_address FROM Customers c ORDER BY CustomerID;"
     ).fetchall()
     return dict(customers=customers)
+
+
+@homework4.get("/products/{id}")
+async def get_product(id: int):
+    if not isinstance(id, int):
+        raise HTTPException(status_code=404, detail="Id not found")
+    cursor = homework4.dbc.cursor()
+    cursor.row_factory = sqlite3.Row
+    product = cursor.execute(
+        "SELECT ProductID id, RTRIM(ProductName) name FROM Products p WHERE ProductID = ?",
+        (id,)
+    ).fetchone()
+    if not product:
+        raise HTTPException(status_code=404, detail="Id not found")
+    return product

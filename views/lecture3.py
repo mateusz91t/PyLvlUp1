@@ -12,6 +12,7 @@ templates = Jinja2Templates(directory='templates')
 lecture2.secret_key = "secret should be long because it is more secjurne"
 lecture2.access_tokens = list()
 
+
 # http://127.0.0.1:8000/lec2/request_query_string_discovery/?asd=2&aac=abc
 @lecture2.get("/request_query_string_discovery/")
 def get_all_query_params(request: Request):
