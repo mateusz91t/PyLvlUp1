@@ -43,28 +43,31 @@ def test_get_products(test_client, p_id, output, s_code):
     assert response.json() == output
 
 
-# @pytest.mark.parametrize(
-#     ['limit', 'offset', 'order', 's_code', 'output'],
-#     [
-#         [None, None, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
-#         [-10, -20, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
-#         [2, 1, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
-#         [None, None, ' ', 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
-#         [None, None, 'abc', 400, {"detail": "Bad Request"}],
-#         [None, 3, 'first_name', 200, {"id": 8,	"last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}],
-#         [None, 7, 'city', 200, {"id": 8,	"last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}]
-#     ]
-# )
-# def test_get_employees(test_client, limit, offset, order, s_code, output):
-#     query = '?'
-#     if limit:
-#         query += f"{limit=}&"
-#     if offset:
-#         query += f"{offset=}&"
-#     if order:
-#         query += f"{order=}&"
-#     print(query)
-#     response = test_client.get(f"/employees{query}")
-#
-#     assert response.status_code == s_code
-#     assert response.json()
+@pytest.mark.parametrize(
+    ['limit', 'offset', 'order', 's_code', 'output'],
+    [
+        [None, None, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
+        [-10, -20, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
+        [2, 1, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
+        [None, None, ' ', 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
+        [None, None, 'abc', 400, {"detail": "Bad Request"}],
+        [None, 3, 'first_name', 200, {"id": 8, "last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}],
+        [None, 7, 'city', 200, {"id": 8, "last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}]
+    ]
+)
+def xtest_get_employees(test_client, limit, offset, order, s_code, output):
+    query = '?'
+    if limit:
+        query += f"{limit=}&"
+    if offset:
+        query += f"{offset=}&"
+    if order:
+        query += f"{order=}&"
+    print(query)
+    response = test_client.get(f"/employees{query}")
+
+    assert response.status_code == s_code
+    if s_code == 200:
+        assert output in response.json()['employees']
+    else:
+        assert output == response.json()
