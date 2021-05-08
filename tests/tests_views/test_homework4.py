@@ -19,5 +19,8 @@ def test_get_categories(test_client):
 def test_get_customers(test_client):
     response = test_client.get("/customers")
     assert response.status_code == 200
-    assert {"id": "ALFKI", "name": "Alfreds Futterkiste",
-               "full_address": "Obere Str. 57 12209 Berlin Germany"} in response.json()['customers']
+    assert {
+               "id": "ALFKI",
+               "name": "Alfreds Futterkiste",
+               "full_address": "Obere Str. 57 12209 Berlin Germany",
+           } in response.json()['customers']

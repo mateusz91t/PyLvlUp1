@@ -28,8 +28,10 @@ async def get_categories():
 async def get_customers():
     cursor = homework4.dbc.cursor()
     cursor.row_factory = sqlite3.Row
-    customers = cursor.execute("SELECT rtrim(CustomerID) id, "
-                                "rtrim(CompanyName) name, "
-                                "rtrim(Address || ' ' || PostalCode || ' ' || City || ' ' || Country) full_address "
-                                "FROM Customers c ORDER BY CustomerID").fetchall()
+    customers = cursor.execute(
+        "SELECT rtrim(CustomerID) id, "
+        "rtrim(COALESCE(CompanyName, '')) name, rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) "
+        "|| ' ' || rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) full_address "
+        "FROM Customers c ORDER BY CustomerID"
+    ).fetchall()
     return dict(customers=customers)
