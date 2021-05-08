@@ -39,7 +39,7 @@ async def get_customers():
         # "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
         # "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
         # "END full_address FROM Customers c ORDER BY UPPER(CustomerID);"
-        "SELECT rtrim(CustomerID) id, rtrim(COALESCE(CompanyName, '')) name, TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) full_address FROM Customers c ORDER BY UPPER(CustomerID);"
+        "SELECT rtrim(CustomerID) id, rtrim(COALESCE(CompanyName, '')) name, TRIM(rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, ''))) full_address FROM Customers c --ORDER BY UPPER(CustomerID);"
     ).fetchall()
     return dict(customers=customers)
 
