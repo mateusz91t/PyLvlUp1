@@ -37,7 +37,7 @@ async def get_customers():
         "   WHEN  '' THEN NULL "
         "   ELSE rtrim(COALESCE(Address, '')) || ' ' || rtrim(COALESCE(PostalCode, '')) || ' ' || "
         "   rtrim(COALESCE(City, '')) || ' ' || rtrim(COALESCE(Country, '')) "
-        "END full_address FROM Customers c ORDER BY CustomerID;"
+        "END full_address FROM Customers c ORDER BY UPPER(CustomerID);"
     ).fetchall()
     return dict(customers=customers)
 
