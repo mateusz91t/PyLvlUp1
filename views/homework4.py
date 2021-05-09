@@ -72,3 +72,15 @@ async def get_employees(limit: int = -1, offset: int = 0, order: str = ''):
         , {"lim": limit, "off": offset}
     ).fetchall()
     return dict(employees=employees)
+
+
+@homework4.get("/products_extended")
+async def get_products_extended():
+    cursor = homework4.dbc.cursor()
+    cursor.row_factory = sqlite3.Row
+    products = cursor.execute(
+        "SELECT p.ProductID id, p.ProductName name, c.CategoryName category, s.CompanyName supplier "
+        "FROM Products p LEFT JOIN Categories c on p.CategoryID = c.CategoryID "
+        "LEFT JOIN Suppliers s on p.SupplierID = s.SupplierID ORDER BY p.ProductID;"
+    ).fetchall()
+    return dict(products_extended=products)

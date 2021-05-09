@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 
 from views.main import app
 
+
 # to run all tests type in terminal:
 # pytest
 # to run custom method by fragment of name:
@@ -68,10 +69,25 @@ def test_get_employees(test_client, limit, offset, order, s_code, output):
         query += f"{offset=}&"
     if order:
         query += f"{order=}&"
-    response = test_client.get(f"/employees", params=dict(limit=limit, offset=offset, order=order))
+    response = test_client.get("/employees", params=dict(limit=limit, offset=offset, order=order))
 
     assert response.status_code == s_code
     if s_code == 200:
         assert output in response.json()['employees']
     else:
         assert output == response.json()
+
+
+def test_get_products_extended(test_client):
+    """This test check status code, output item and sorting"""
+    response = test_client.get("/products_extended")
+    assert response.status_code == 200  # status
+    assert {  # output item
+               "id": 1,
+               "name": "Chai",
+               "category": "Beverages",
+               "supplier": "Exotic Liquids",
+           } in response.json()["products_extended"]
+    # and sorting
+    assert response.json()["products_extended"][0]['id'] < response.json()["products_extended"][1]['id']
+    assert response.json()["products_extended"][-2]['id'] < response.json()["products_extended"][-1]['id']
