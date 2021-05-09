@@ -3,6 +3,11 @@ from fastapi.testclient import TestClient
 
 from views.main import app
 
+# to run all tests type in terminal:
+# pytest
+# to run custom method by fragment of name:
+# pytest -svk employee
+
 
 @pytest.yield_fixture
 def test_client():
@@ -45,14 +50,14 @@ def test_get_products(test_client, p_id, output, s_code):
 
 @pytest.mark.parametrize(
     ['limit', 'offset', 'order', 's_code', 'output'],
-    [  # why are they not working ? !
+    [
         [None, None, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
         [-10, -20, None, 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
         [2, 1, None, 200, {"id": 2, "last_name": "Fuller", "first_name": "Andrew", "city": "Tacoma"}],
-        # [None, None, '%20', 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
+        [None, None, ' ', 200, {"id": 1, "last_name": "Davolio", "first_name": "Nancy", "city": "Seattle"}],
         [None, None, 'abc', 400, {"detail": "Bad Request"}],
-        # [None, 3, 'first_name', 200, {"id": 8, "last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}],
-        # [None, 7, 'city', 200, {"id": 8, "last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}]
+        [None, 3, 'first_name', 200, {"id": 8, "last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}],
+        [None, 7, 'city', 200, {"id": 8, "last_name": "Callahan", "first_name": "Laura", "city": "Seattle"}]
     ]
 )
 def test_get_employees(test_client, limit, offset, order, s_code, output):
@@ -63,7 +68,7 @@ def test_get_employees(test_client, limit, offset, order, s_code, output):
         query += f"{offset=}&"
     if order:
         query += f"{order=}&"
-    response = test_client.get(f"/employees{query}")
+    response = test_client.get(f"/employees", params=dict(limit=limit, offset=offset, order=order))
 
     assert response.status_code == s_code
     if s_code == 200:

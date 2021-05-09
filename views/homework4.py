@@ -3,7 +3,11 @@ import sqlite3
 from fastapi import APIRouter, HTTPException
 
 homework4 = APIRouter()
-emp_orders = {'last_name': 'LastName', 'first_name': 'FirstName', 'city': 'City', 'EmployeeID': 'EmployeeID'}
+emp_orders = {'last_name': 'LastName',
+              'first_name': 'FirstName',
+              'city': 'City',
+              'EmployeeID': 'EmployeeID',
+              '': "EmployeeID"}
 
 
 @homework4.on_event("startup")
@@ -54,14 +58,17 @@ async def get_product(id: int):
 
 
 @homework4.get("/employees")
-async def get_employees(limit: int = -1, offset: int = 0, order: str = 'EmployeeID'):
+async def get_employees(limit: int = -1, offset: int = 0, order: str = ''):
+    order = order.strip()
     if not (isinstance(limit, int) and isinstance(offset, int) and order in emp_orders.keys()):
         raise HTTPException(status_code=400)
     cursor = homework4.dbc.cursor()
     cursor.row_factory = sqlite3.Row
+    print(order)
+    # print(emp_orders[order])
     employees = cursor.execute(
         "SELECT EmployeeID id, LastName last_name, FirstName first_name, City city "
-        "FROM Employees e ORDER BY :orderby LIMIT :lim OFFSET :off;"
-        , dict(orderby=emp_orders[order], lim=limit, off=offset)
+        f"FROM Employees ORDER BY {emp_orders[order]} LIMIT :lim OFFSET :off;"
+        , {"lim": limit, "off": offset}
     ).fetchall()
     return dict(employees=employees)
