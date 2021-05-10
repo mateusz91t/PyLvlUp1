@@ -108,27 +108,26 @@ async def get_orders_by_id_product(id: int):
     return dict(orders=orders)
 
 
-@homework4.post("/categories", status_code=201)
+@homework4.post("/categories", status_code=201, response_model=CategoryAdded)
 async def post_category(category: CategoryToAdd):
     cursor = homework4.dbc.cursor()
     cursor.execute("INSERT INTO Categories (CategoryName) VALUES (?);", (category.name,))
-    category_added = CategoryAdded
-    category_added.name = category.name
-    category_added.id = cursor.lastrowid
+    category_added = CategoryAdded(name=category.name, id=cursor.lastrowid)
     homework4.dbc.commit()
+    print(category)
+    print(category_added)
     return category_added
 
 
-@homework4.put("/categories/{id}")
+@homework4.put("/categories/{id}", response_model=CategoryAdded)
 async def put_category(id: int, category: CategoryToAdd):
     cursor = homework4.dbc.cursor()
     cursor.execute("UPDATE Categories SET CategoryName = :cname WHERE CategoryID = :cid;"
                    , dict(cname=category.name, cid=id))
+    print(f"{cursor.lastrowid = }")  # why cursor.lastrowid return 0??
     if cursor.rowcount <= 0:
         raise HTTPException(status_code=404, detail="Id not found")
-    category_added = CategoryAdded
-    category_added.name = category.name
-    category_added.id = cursor.lastrowid
+    category_added = CategoryAdded(name=category.name, id=id)  # why cursor.lastrowid return 0??
     homework4.dbc.commit()
     return category_added
 
