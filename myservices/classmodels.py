@@ -30,3 +30,12 @@ class Customer(BaseModel):
     Country: str
     Phone: str
     Fax: str
+
+
+class CategoryToAdd(BaseModel):
+    name: str
+
+
+class CategoryAdded(BaseModel):
+    id: int
+    name: str

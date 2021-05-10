@@ -2,6 +2,8 @@ import sqlite3
 
 from fastapi import APIRouter, HTTPException
 
+from myservices.classmodels import CategoryToAdd, CategoryAdded
+
 homework4 = APIRouter()
 emp_orders = {'last_name': 'LastName',
               'first_name': 'FirstName',
@@ -104,3 +106,38 @@ async def get_orders_by_id_product(id: int):
         , (id,)
     ).fetchall()
     return dict(orders=orders)
+
+
+@homework4.post("/categories", status_code=201)
+async def post_category(category: CategoryToAdd):
+    cursor = homework4.dbc.cursor()
+    cursor.execute("INSERT INTO Categories (CategoryName) VALUES (?);", (category.name,))
+    category_added = CategoryAdded
+    category_added.name = category.name
+    category_added.id = cursor.lastrowid
+    homework4.dbc.commit()
+    return category_added
+
+
+@homework4.put("/categories/{id}")
+async def put_category(id: int, category: CategoryToAdd):
+    cursor = homework4.dbc.cursor()
+    cursor.execute("UPDATE Categories SET CategoryName = :cname WHERE CategoryID = :cid;"
+                   , dict(cname=category.name, cid=id))
+    if cursor.rowcount <= 0:
+        raise HTTPException(status_code=404, detail="Id not found")
+    category_added = CategoryAdded
+    category_added.name = category.name
+    category_added.id = cursor.lastrowid
+    homework4.dbc.commit()
+    return category_added
+
+
+@homework4.delete("/categories/{id}")
+async def delete_category(id: int):
+    cursor = homework4.dbc.cursor()
+    cursor.execute("DELETE FROM Categories WHERE CategoryID = ?;", (id,))
+    if cursor.rowcount <= 0:
+        raise HTTPException(status_code=404, detail="Id not found")
+    homework4.dbc.commit()
+    return dict(deleted=cursor.rowcount)
