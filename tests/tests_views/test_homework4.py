@@ -137,6 +137,8 @@ def delete_category(test_client, id, s_code, output):
     assert response.json() == output
 
 
+# to run only test category:
+# pytest -svk category
 def test_category_crud(test_client):
     client = test_client
     added_categories_ids = list()

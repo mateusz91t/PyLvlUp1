@@ -66,8 +66,6 @@ async def get_employees(limit: int = -1, offset: int = 0, order: str = ''):
         raise HTTPException(status_code=400)
     cursor = homework4.dbc.cursor()
     cursor.row_factory = sqlite3.Row
-    print(order)
-    # print(emp_orders[order])
     employees = cursor.execute(
         "SELECT EmployeeID id, LastName last_name, FirstName first_name, City city "
         f"FROM Employees ORDER BY {emp_orders[order]} LIMIT :lim OFFSET :off;"
@@ -114,8 +112,6 @@ async def post_category(category: CategoryToAdd):
     cursor.execute("INSERT INTO Categories (CategoryName) VALUES (?);", (category.name,))
     category_added = CategoryAdded(name=category.name, id=cursor.lastrowid)
     homework4.dbc.commit()
-    print(category)
-    print(category_added)
     return category_added
 
 
