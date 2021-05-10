@@ -84,3 +84,23 @@ async def get_products_extended():
         "LEFT JOIN Suppliers s on p.SupplierID = s.SupplierID ORDER BY p.ProductID;"
     ).fetchall()
     return dict(products_extended=products)
+
+
+@homework4.get("/products/{id}/orders")
+async def get_orders_by_id_product(id: int):
+    cursor = homework4.dbc.cursor()
+    cursor.row_factory = sqlite3.Row
+    product = cursor.execute(
+        "SELECT p.ProductID FROM Products p where p.ProductID = ?", (id,)
+    ).fetchone()
+    if not product:
+        raise HTTPException(status_code=404, detail="Id not found")
+    orders = cursor.execute(
+        "SELECT o.OrderID id, c.CompanyName customer, od.Quantity quantity, "
+        "ROUND((od.UnitPrice * od.Quantity) - (od.Discount * od.UnitPrice * od.Quantity), 2) total_price "
+        "FROM Orders o INNER JOIN 'Order Details' od on o.OrderID = od.OrderID "
+        "INNER JOIN Products p on od.ProductID = p.ProductID LEFT JOIN Customers c on o.CustomerID = c.CustomerID "
+        "WHERE p.ProductID = ? ORDER BY o.OrderID"
+        , (id,)
+    ).fetchall()
+    return dict(orders=orders)

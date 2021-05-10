@@ -79,7 +79,7 @@ def test_get_employees(test_client, limit, offset, order, s_code, output):
 
 
 def test_get_products_extended(test_client):
-    """This test check status code, output item and sorting"""
+    """The test check a status code, an output item and sorting"""
     response = test_client.get("/products_extended")
     assert response.status_code == 200  # status
     assert {  # output item
@@ -91,3 +91,19 @@ def test_get_products_extended(test_client):
     # and sorting
     assert response.json()["products_extended"][0]['id'] < response.json()["products_extended"][1]['id']
     assert response.json()["products_extended"][-2]['id'] < response.json()["products_extended"][-1]['id']
+
+
+@pytest.mark.parametrize(
+    ['id', 's_code', 'output'],
+    [
+        [10, 200, {"id": 10273, "customer": "QUICK-Stop", "quantity": 24, "total_price": 565.44}],
+        [1234567, 404, {"detail": "Id not found"}]
+    ]
+)
+def test_get_orders_by_id_product(test_client, id, s_code, output):
+    response = test_client.get(f"/products/{id}/orders")
+    assert response.status_code == s_code
+    if s_code == 200:
+        assert output in response.json()['orders']
+    else:
+        assert output == response.json()
