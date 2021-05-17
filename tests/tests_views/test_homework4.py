@@ -4,12 +4,6 @@ from fastapi.testclient import TestClient
 from views.main import app
 
 
-# to run all tests type in terminal:
-# pytest
-# to run custom method by fragment of name:
-# pytest -svk employee
-
-
 @pytest.yield_fixture
 def test_client():
     with TestClient(app) as client:

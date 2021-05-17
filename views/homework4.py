@@ -2,7 +2,7 @@ import sqlite3
 
 from fastapi import APIRouter, HTTPException
 
-from myservices.classmodels import CategoryToAdd, CategoryAdded
+from myservices.classmodels_to_sqlite import CategoryToAdd, CategoryAdded
 
 homework4 = APIRouter()
 emp_orders = {'last_name': 'LastName',

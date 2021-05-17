@@ -3,7 +3,7 @@ import sqlite3
 from fastapi import APIRouter, status
 
 # It is possilble to use async lib aiosqlite alternatively
-from myservices.classmodels import Customer
+from myservices.classmodels_to_sqlite import Customer
 
 lecture4 = APIRouter()
 

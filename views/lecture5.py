@@ -17,7 +17,7 @@ async def get_shippers(db: Session = Depends(get_db)):
 
 @lecture5.get("/shippers/{shipper_id}", response_model=schemas.Shipper)
 async def get_shipper(shipper_id: PositiveInt, db: Session = Depends(get_db)):
-    db_shipper = crud.get_shipper(db, shipper_id)
+    db_shipper = crud.get_shipper(shipper_id, db)
     if not db_shipper:
         raise HTTPException(status_code=404, detail="Shipper not found")
     return db_shipper
