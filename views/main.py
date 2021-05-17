@@ -30,9 +30,13 @@ app.include_router(lecture5, prefix="/lec5", tags=["lecture5"])
 
 
 # to run type:
+# docker-compose up
 # uvicorn views.main:app --reload
-# with postgres:
+# run with postgres [Linux]:
 # SQLALCHEMY_DATABASE_URL="postgresql://postgres:DaftAcademy@127.0.0.1:5555/postgres" uvicorn views.main:app --reload --host=0.0.0.0 --port=${PORT:-5000}
+# or to set the env variable in Win10 with venv (e.g. PyCharm)
+# set SQLALCHEMY_DATABASE_URL=postgresql://postgres:DaftAcademy@127.0.0.1:5555/postgres
+# and next you can run with: uvicorn views.main:app
 
 # connecting to DB locally:
 # 1) run a docker
