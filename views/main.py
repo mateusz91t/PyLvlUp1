@@ -32,7 +32,7 @@ app.include_router(lecture5, prefix="/lec5", tags=["lecture5"])
 # to run type:
 # uvicorn views.main:app --reload
 # with postgres:
-# SQLALCHEMY_DATABASE_URL="postgresql://postgres:DaftAcademy@127.0.0.1:5555/postgres" uvicorn app.main:app --reload --host=0.0.0.0 --port=${PORT:-5000}
+# SQLALCHEMY_DATABASE_URL="postgresql://postgres:DaftAcademy@127.0.0.1:5555/postgres" uvicorn views.main:app --reload --host=0.0.0.0 --port=${PORT:-5000}
 
 # connecting to DB locally:
 # 1) run a docker
