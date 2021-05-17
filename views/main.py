@@ -18,7 +18,7 @@ app.counter = count()
 app.register_counter = count()
 app.patient = dict()
 
-app.include_router(lecture2, tags=["homework5"])
+app.include_router(lecture2, tags=["lecture2"])
 
 app.__name__ = 'templates'
 mako = fastapi_mako.FastAPIMako(app)
@@ -26,7 +26,7 @@ mako = fastapi_mako.FastAPIMako(app)
 app.include_router(homework3, tags=["homework2"])
 app.include_router(lecture4, prefix="/lec4", tags=["lecture4"])
 app.include_router(homework4, tags=["homework4"])
-# app.include_router(lecture5, prefix="/lec5", tags=["lecture5"])
+app.include_router(lecture5, prefix="/lec5", tags=["lecture5"])
 
 
 # to run type:
