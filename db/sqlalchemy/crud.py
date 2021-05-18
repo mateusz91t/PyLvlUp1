@@ -31,7 +31,7 @@ def get_suppliers_products(supplier_id: int, db: Session):
         # models.Category.CategoryName
     ).join(models.Category, models.Supplier). \
         filter(models.Supplier.SupplierID == supplier_id). \
-        order_by(models.Product.ProductID)
+        order_by(models.Product.ProductID.desc())
 
     # print(str(o.statement.compile(dialect=postgresql.dialect())))
 
