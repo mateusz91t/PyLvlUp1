@@ -81,7 +81,7 @@ def logout_session(session_token: str = Cookie(None), format: str = ""):
 
 
 @homework3.delete("/logout_token")
-def logout_token(request: Request, session_token: str = "", format: str = ""):
+def logout_token(request: Request, token: str = "", format: str = ""):
     print(homework3.saved_tokens)
     print(f"{request.method = }")
     print(f"{request.values()}")
@@ -92,9 +92,9 @@ def logout_token(request: Request, session_token: str = "", format: str = ""):
     print(f"{request.headers = }")
     print(f"{request.form() = }")
     print(f"{request.items() = }")
-    if session_token not in homework3.saved_tokens:
+    if token not in homework3.saved_tokens:
         raise HTTPException(status_code=401)
-    homework3.saved_tokens = list(filter(lambda x: x != session_token, homework3.saved_tokens))
+    homework3.saved_tokens = list(filter(lambda x: x != token, homework3.saved_tokens))
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
 
 
