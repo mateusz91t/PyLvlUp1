@@ -81,7 +81,7 @@ def logout_session(session_token: str = Cookie(None), format: str = ""):
 
 
 @homework3.delete("/logout_token")
-def logout_token(session_token: str, format: str = ""):
+def logout_token(session_token: str = "", format: str = ""):
     print(homework3.saved_tokens)
     if session_token not in homework3.saved_tokens:
         raise HTTPException(status_code=401)
