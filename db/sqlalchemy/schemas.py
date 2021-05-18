@@ -54,7 +54,7 @@ class SupplierAdded(SupplierPost):
 
 
 class SupplierToUpdate(ConfigSchema):
-    CompanyName: constr(max_length=40)
+    CompanyName: Optional[constr(max_length=40)]
     ContactName: Optional[constr(max_length=30)] = None
 
 
