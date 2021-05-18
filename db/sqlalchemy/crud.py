@@ -58,7 +58,6 @@ def put_supplier(supplier_id: int, supplier: schemas.SupplierToUpdate, db: Sessi
     return next(result)
 
 
-
 def delete_supplier(supplier_id: int, db: Session):
     db_delete = (
         delete(models.Supplier).where(models.Supplier.SupplierID == supplier_id).returning(models.Supplier.SupplierID)
