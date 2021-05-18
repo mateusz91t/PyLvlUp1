@@ -1,4 +1,4 @@
-from sqlalchemy import func, update, insert, delete
+from sqlalchemy import update, insert, delete
 from sqlalchemy.orm import Session
 
 from db.sqlalchemy import models, schemas
@@ -49,7 +49,9 @@ def post_suppliers(supplier, db: Session):
 
 def put_supplier(supplier_id: int, supplier: schemas.SupplierToUpdate, db: Session):
     db_update = (
-        update(models.Supplier).where(models.Supplier.SupplierID == supplier_id).values(**supplier.dict()).returning(models.Supplier)
+        update(models.Supplier).\
+            where(models.Supplier.SupplierID == supplier_id).\
+            values(**supplier.dict(exclude_none=True)).returning(models.Supplier)
     )
     result = db.execute(db_update)
     output = list()
