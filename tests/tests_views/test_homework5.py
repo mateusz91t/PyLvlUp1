@@ -94,3 +94,34 @@ def test_read_get_supplier():
     assert supplier.Phone == "(100) 555-4822"
     assert supplier.Fax is None
     assert supplier.HomePage == "#CAJUN.HTM#"
+
+
+@pytest.mark.parametrize(
+    ['supplier_id', 's_code', 'output'],
+    [
+        [2, 200, {
+            "ProductID": 65,
+            "ProductName": "Louisiana Fiery Hot Pepper Sauce",
+            "Category": {"CategoryID": 2, "CategoryName": "Condiments"},
+            "Discontinued": 0
+        }],
+        [-2, 422, {
+            "detail": [
+                {
+                    "loc": ["path", "supplier_id"],
+                    "msg": "ensure this value is greater than 0",
+                    "type": "value_error.number.not_gt",
+                    "ctx": {"limit_value": 0}
+                }
+            ]
+        }],
+        [1234, 404, {"detail": "Supplier not found"}]
+    ]
+)
+def test_endpoint_get_suppliers_products(test_client, supplier_id, s_code, output):
+    response = test_client.get(f"/suppliers/{supplier_id}/products")
+    assert response.status_code == s_code
+    if response.status_code == 200:
+        assert output in response.json()
+    else:
+        assert output == response.json()

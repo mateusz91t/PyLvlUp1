@@ -1,3 +1,5 @@
+from sqlalchemy import select
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Session
 
 from db.sqlalchemy import models
@@ -23,24 +25,14 @@ def get_suppliers_products(supplier_id: int, db: Session):
     o = db.query(
         models.Product.ProductID,
         models.Product.ProductName,
-        models.Category.CategoryID,
-        models.Category.CategoryName,
-        models.Product.Discontinued
+        models.Product.Discontinued,
+        models.Category,
+        # models.Category.CategoryID,
+        # models.Category.CategoryName
     ).join(models.Category, models.Supplier).\
         filter(models.Supplier.SupplierID == supplier_id).\
-        order_by(models.Product.ProductID).all()
-    # print(o)
-    # print(type(o))
-    # print(o[0])
-    # print(o[0]['ProductID'])
-    # print(type(o[0]))
-    o = db.query(
-        models.Product,
-        models.Product.ProductID
-    ).all()
-    print(o)
-    print(type(o))
-    print(o[0])
-    print(o[0]['ProductID'])
-    print(type(o[0]))
-    return o
+        order_by(models.Product.ProductID)
+
+    # print(str(o.statement.compile(dialect=postgresql.dialect())))
+
+    return o.all()

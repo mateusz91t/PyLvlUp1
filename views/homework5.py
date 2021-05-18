@@ -23,7 +23,7 @@ async def get_supplier(supplier_id: PositiveInt, db: Session = Depends(get_db)):
     return db_supplier
 
 
-@homework5.get("/suppliers/{supplier_id}/products")#, response_model=schemas.Product)
+@homework5.get("/suppliers/{supplier_id}/products", response_model=List[schemas.Product])
 async def get_suppliers_products(supplier_id: PositiveInt, db: Session = Depends(get_db)):
     products = crud.get_suppliers_products(supplier_id, db)
     if not products:

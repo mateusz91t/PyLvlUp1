@@ -40,5 +40,5 @@ class CategoryIdName(ConfigSchema):
 class Product(ConfigSchema):
     ProductID: PositiveInt
     ProductName: constr(max_length=40)
-    owner: Optional[CategoryIdName]
+    Category: Optional[CategoryIdName]
     Discontinued: int
