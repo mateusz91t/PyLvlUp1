@@ -38,10 +38,13 @@ async def post_supplier(supplier: schemas.SupplierToAdd, db: Session = Depends(g
 
 @homework5.put("/suppliers/{supplier_id}", response_model=schemas.SupplierAdded)
 async def put_supplier(supplier_id: PositiveInt, supplier: schemas.SupplierToUpdate, db: Session = Depends(get_db)):
-    put_sup = crud.put_supplier(supplier_id, supplier, db)
-    if not put_sup:
+    exists_supp = crud.get_supplier(supplier_id, db)
+    if not exists_supp:
         raise HTTPException(status_code=404, detail="SupplierID not found")
-    return put_sup
+    if supplier.dict(exclude_none=True):
+        return crud.put_supplier(supplier_id, supplier, db)
+    else:
+        return exists_supp
 
 
 @homework5.delete("/suppliers/{supplier_id}", status_code=204)

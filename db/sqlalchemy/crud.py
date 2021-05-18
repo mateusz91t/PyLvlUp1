@@ -48,23 +48,15 @@ def post_suppliers(supplier, db: Session):
 
 
 def put_supplier(supplier_id: int, supplier: schemas.SupplierToUpdate, db: Session):
-    result = list()
-    sup_dict = supplier.dict(exclude_none=True)
-    if sup_dict:
-        db_update = (
-            update(models.Supplier).
-            where(models.Supplier.SupplierID == supplier_id).
-            values(**sup_dict).returning(models.Supplier)
-        )
-        result = db.execute(db_update)
-        db.commit()
-    output = list()
-    for el in result:
-        output.append(el)
-    if output:
-        return output[0]
-    else:
-        return output
+    db_update = (
+        update(models.Supplier).
+        where(models.Supplier.SupplierID == supplier_id).
+        values(**supplier.dict(exclude_none=True)).returning(models.Supplier)
+    )
+    result = db.execute(db_update)
+    db.commit()
+    return next(result)
+
 
 
 def delete_supplier(supplier_id: int, db: Session):
