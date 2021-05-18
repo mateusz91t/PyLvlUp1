@@ -1,7 +1,7 @@
-from sqlalchemy import func
+from sqlalchemy import func, update, insert, delete
 from sqlalchemy.orm import Session
 
-from db.sqlalchemy import models
+from db.sqlalchemy import models, schemas
 
 
 def get_shippers(db: Session):
@@ -25,6 +25,7 @@ def get_suppliers_products(supplier_id: int, db: Session):
         models.Product.ProductID,
         models.Product.ProductName,
         models.Product.Discontinued,
+        # Is there a better solution to SELECT * FROM categories; ??
         models.Category,
         # models.Category.CategoryID,
         # models.Category.CategoryName
@@ -38,7 +39,30 @@ def get_suppliers_products(supplier_id: int, db: Session):
 
 
 def post_suppliers(supplier, db: Session):
-    db.add(models.Supplier(**supplier.dict()))
+    db_insert = (
+        insert(models.Supplier).values(**supplier.dict()).returning(models.Supplier)
+    )
+    result = db.execute(db_insert)
     db.commit()
-    supp_id = db.query(func.max(models.Supplier.SupplierID)).scalar()
-    return get_supplier(supplier_id=supp_id, db=db)
+    return next(result)
+
+
+def put_supplier(supplier_id: int, supplier: schemas.SupplierToUpdate, db: Session):
+    db_update = (
+        update(models.Supplier).where(models.Supplier.SupplierID == supplier_id).values(**supplier.dict()).returning(models.Supplier)
+    )
+    result = db.execute(db_update)
+    db.commit()
+    return next(result)
+
+
+def delete_supplier(supplier_id: int, db: Session):
+    db_delete = (
+        delete(models.Supplier).where(models.Supplier.SupplierID == supplier_id).returning(models.Supplier.SupplierID)
+    )
+    result = db.execute(db_delete)
+    output = list()
+    for el in result:
+        output.append(el)
+    db.commit()
+    return output

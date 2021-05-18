@@ -53,6 +53,11 @@ class SupplierAdded(SupplierPost):
     HomePage: Optional[str] = None
 
 
+class SupplierToUpdate(ConfigSchema):
+    CompanyName: constr(max_length=40)
+    ContactName: Optional[constr(max_length=30)] = None
+
+
 class CategoryIdName(ConfigSchema):
     CategoryID: PositiveInt
     CategoryName: constr(max_length=40)
