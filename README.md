@@ -64,4 +64,8 @@ https://py-lvl-up-1.herokuapp.com/docs
 2) `psql -U postgres < docker-entrypoint-initdb.d/migration.sql`
 
 ###send a dump to heroku [RAW FILE !!! not preview]:
-`heroku pg:backups:restore https://github.com/mateusz91t/PyLvlUp1/raw/master/migrations/northwind.dump --app py-lvl-up-1 --confirm py-lvl-up-1`
+1) connect to container with DB
+2) `pg_dump --format=c --no-owner --no-acl -U postgres > northwind.sql.dump`
+3) share DB in net [e.g. commit & push to github repo]
+4) run in local terminal:  
+   `heroku pg:backups:restore https://github.com/mateusz91t/PyLvlUp1/raw/master/db/sqlalchemy/migrations/northwind2.dump --app py-lvl-up-1 --confirm py-lvl-up-1`

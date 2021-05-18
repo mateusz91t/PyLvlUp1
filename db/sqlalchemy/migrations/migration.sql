@@ -3909,8 +3909,14 @@ ALTER COLUMN "TerritoryDescription" TYPE character(64);
 
 
 
-
-
+---------------------------------------------
+ALTER TABLE ONLY products
+    ADD CONSTRAINT fk_product_category
+        FOREIGN KEY("CategoryID")
+            REFERENCES categories("CategoryID") MATCH FULL,
+    ADD CONSTRAINT fk_product_supplier
+        FOREIGN KEY("SupplierID")
+            REFERENCES suppliers("SupplierID") MATCH FULL;
 
 
 

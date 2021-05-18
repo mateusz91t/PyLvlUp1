@@ -14,12 +14,12 @@ class Shipper(ConfigSchema):
     Phone: constr(max_length=24)
 
 
-class SupplierAll(ConfigSchema):
+class SupplierIdName(ConfigSchema):
     SupplierID: PositiveInt
     CompanyName: constr(max_length=40)
 
 
-class Supplier(SupplierAll):
+class Supplier(SupplierIdName):
     ContactName: Optional[constr(max_length=30)] = None
     ContactTitle: Optional[constr(max_length=30)] = None
     Address: Optional[constr(max_length=60)] = None
@@ -30,3 +30,15 @@ class Supplier(SupplierAll):
     Phone: Optional[constr(max_length=24)] = None
     Fax: Optional[constr(max_length=24)] = None
     HomePage: Optional[str] = None
+
+
+class CategoryIdName(ConfigSchema):
+    CategoryID: PositiveInt
+    CategoryName: constr(max_length=40)
+
+
+class Product(ConfigSchema):
+    ProductID: PositiveInt
+    ProductName: constr(max_length=40)
+    owner: Optional[CategoryIdName]
+    Discontinued: int
