@@ -71,7 +71,7 @@ def test_read_get_suppliers():
                 }
             ]
         }],
-        [999, 404, {"detail": "Supplier not found"}]
+        [999, 404, {"detail": "SupplierAll not found"}]
     ]
 )
 def test_endpoint_get_supplier(test_client, supplier_id, s_code, output):
@@ -115,7 +115,7 @@ def test_read_get_supplier():
                 }
             ]
         }],
-        [1234, 404, {"detail": "Supplier not found"}]
+        [1234, 404, {"detail": "SupplierAll not found"}]
     ]
 )
 def test_endpoint_get_suppliers_products(test_client, supplier_id, s_code, output):

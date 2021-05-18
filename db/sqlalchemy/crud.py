@@ -1,5 +1,4 @@
-from sqlalchemy import select
-from sqlalchemy.dialects import postgresql
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from db.sqlalchemy import models
@@ -29,10 +28,17 @@ def get_suppliers_products(supplier_id: int, db: Session):
         models.Category,
         # models.Category.CategoryID,
         # models.Category.CategoryName
-    ).join(models.Category, models.Supplier).\
-        filter(models.Supplier.SupplierID == supplier_id).\
+    ).join(models.Category, models.Supplier). \
+        filter(models.Supplier.SupplierID == supplier_id). \
         order_by(models.Product.ProductID)
 
     # print(str(o.statement.compile(dialect=postgresql.dialect())))
 
     return o.all()
+
+
+def post_suppliers(supplier, db: Session):
+    db.add(models.Supplier(**supplier.dict()))
+    db.commit()
+    supp_id = db.query(func.max(models.Supplier.SupplierID)).scalar()
+    return get_supplier(supplier_id=supp_id, db=db)
