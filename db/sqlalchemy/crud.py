@@ -52,8 +52,14 @@ def put_supplier(supplier_id: int, supplier: schemas.SupplierToUpdate, db: Sessi
         update(models.Supplier).where(models.Supplier.SupplierID == supplier_id).values(**supplier.dict()).returning(models.Supplier)
     )
     result = db.execute(db_update)
+    output = list()
+    for el in result:
+        output.append(el)
     db.commit()
-    return next(result)
+    if output:
+        return output[0]
+    else:
+        return output
 
 
 def delete_supplier(supplier_id: int, db: Session):
