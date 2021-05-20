@@ -56,7 +56,6 @@ def post_login_token(credentials: HTTPBasicCredentials = Depends(basic)):
 
 @homework3.get('/welcome_session')
 def get_welcome_session(session_token: str = Cookie(None), format: str = ""):
-    print(session_token)
     print(homework3.saved_cookies)
     if session_token not in homework3.saved_cookies:
         raise HTTPException(status_code=401)
@@ -81,24 +80,14 @@ def logout_session(session_token: str = Cookie(None), format: str = ""):
 
 
 @homework3.delete("/logout_token")
-def logout_token(request: Request, token: str = "", format: str = ""):
+def logout_token(token: str = "", format: str = ""):
     print(homework3.saved_tokens)
-    print(f"{request.method = }")
-    print(f"{request.values()}")
-    print(f"{request.json()}")
-    print(f"{request.client = }")
-    print(f"{request.keys() = }")
-    print(f"{request.cookies = }")
-    print(f"{request.headers = }")
-    print(f"{request.form() = }")
-    print(f"{request.items() = }")
     if token not in homework3.saved_tokens:
         raise HTTPException(status_code=401)
     homework3.saved_tokens = list(filter(lambda x: x != token, homework3.saved_tokens))
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
 
 
-# @homework3.delete("/logged_out", status_code=200)
 @homework3.get("/logged_out")
 def logged_out(format: str = ""):
     return get_response_by_format(format, 'Logged out!')
